@@ -25,7 +25,7 @@ import axios from 'axios'
 // ** Types
 import { InvoiceType } from 'src/types/apps/invoiceTypes'
 // import { UserLayoutType, UsersType } from 'src/types/apps/userTypes'
-import { UserLayoutType } from 'src/types/apps/userTypes'
+import { DBCUsersType, UserLayoutType } from 'src/types/apps/userTypes'
 import { ApproveEntryType } from 'src/types/apps/ApproveEntryTypes'
 import Jobdetail from 'src/types/apps/ApproveEntryTypes'
 
@@ -55,10 +55,11 @@ const DocumentView = () => {
 
 
     useEffect(() => {
+        const storedToken: DBCUsersType = JSON.parse(window.localStorage.getItem('DBC')!)
         axios
             .post('https://eteapi.sapware.net/approveEntryAndDetailByDocumentId', {
-                "user": `henrry`,
-                "pass": `P@ssw0rd@1`,
+                "user": `${storedToken.user}`,
+                "pass": `${storedToken.pass}`,
                 "documentId": `ETEM-MM-63/180`
                 // "user": `benz`,
                 // "pass": `P@ssw0rd@1`,
@@ -160,8 +161,7 @@ const DocumentView = () => {
             <Grid container spacing={6}>
                 <Grid item xs={12}>
                     <Alert severity='error'>
-                        User with the id does not exist. Please check the list of users:{' '}
-                        <Link href='/apps/user/list'>User List</Link>
+                        ดึงข้อมูลไม่ได้ Webservice ที่ business central 365 มีปัญหา
                     </Alert>
                 </Grid>
             </Grid>
@@ -170,8 +170,8 @@ const DocumentView = () => {
         return (
             <Grid container spacing={6}>
                 <Grid item xs={12}>
-                    <Alert severity='error'>
-                        ดึงข้อมูลไม่ได้ Webservice ที่ business central 365 มีปัญหา
+                    <Alert severity='warning'>
+                        กำลังดึงข้อมูลจาก business central 365
                     </Alert>
                 </Grid>
             </Grid>

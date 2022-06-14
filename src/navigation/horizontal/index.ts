@@ -16,17 +16,12 @@ const navigation = (): HorizontalNavItemsType => {
         {
           icon: ChartDonut,
           title: 'Home',
-          path: '/crm'
+          path: '/home'
         },
         {
           icon: ChartTimelineVariant,
           title: 'Document',
           path: '/document'
-        },
-        {
-          icon: CartOutline,
-          title: 'eCommerce',
-          path: '/apps/user/list'
         }
       ]
     }

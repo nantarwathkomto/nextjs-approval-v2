@@ -10,6 +10,11 @@ import axios from 'axios'
 // ** Config
 import authConfig from 'src/configs/auth'
 
+// *Fribase
+import firebase from 'src/configs/firebase';
+import { getAuth, signInWithPopup, OAuthProvider } from "firebase/auth";
+
+
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 
@@ -40,6 +45,7 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
@@ -72,6 +78,34 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
+    // console.log('useEffect : ' + user);
+    // const provider = new firebase.auth.OAuthProvider('microsoft.com');
+    // provider.setCustomParameters({
+    //   // prompt: "consent",
+    //   // login_hint: 'user@firstadd.onmicrosoft.com'
+    //   tenant: "cae77d3c-afe2-4cd8-9854-7c7020e38188"
+    // })
+    // provider.addScope('mail.read');
+    // provider.addScope('calendars.read');
+
+    // const auth = getAuth();
+    // signInWithPopup(auth, provider)
+    //   .then((result) => {
+    //     // User is signed in.
+    //     // IdP data available in result.additionalUserInfo.profile.
+
+    //     // Get the OAuth access token and ID Token
+    //     const credential = OAuthProvider.credentialFromResult(result);
+    //     const accessToken = credential.accessToken;
+    //     const idToken = credential.idToken;
+    //     console.log(accessToken);
+    //     console.log(idToken);
+
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+
     axios
       .post(authConfig.loginEndpoint, params)
       .then(async res => {
@@ -86,9 +120,13 @@ const AuthProvider = ({ children }: Props) => {
           })
           .then(async response => {
             const returnUrl = router.query.returnUrl
-
+            const DBC = {
+              user: "henrry",
+              pass: "P@ssw0rd@1"
+            }
             setUser({ ...response.data.userData })
             await window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
+            await window.localStorage.setItem('DBC', JSON.stringify(DBC))
 
             const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
@@ -104,6 +142,7 @@ const AuthProvider = ({ children }: Props) => {
     setUser(null)
     setIsInitialized(false)
     window.localStorage.removeItem('userData')
+    window.localStorage.removeItem('DBC')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
     router.push('/login')
   }

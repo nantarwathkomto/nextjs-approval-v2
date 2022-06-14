@@ -1,40 +1,85 @@
 // ** MUI Imports
-import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import CardContent from '@mui/material/CardContent'
+import Alert from '@mui/material/Alert'
+
+// ** Icon Imports
+import CartPlus from 'mdi-material-ui/CartPlus'
+import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
+
+// ** Custom Component Import
+import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
+
+// ** Styled Component Import
+import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+
+// ** Demo Components Imports
+import MostSalesInCountries from 'src/views/home/MostSalesInCountries'
+import ApproveEntryTable from 'src/views/home/ApproveEntryTable'
+
+
+// **
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { DBCUsersType } from 'src/types/apps/userTypes'
+import { ApproveEntry } from 'src/model'
+
 const Home = () => {
-  return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Kick start your project 🚀'></CardHeader>
-          <CardContent>
-            <Typography sx={{ mb: 2 }}>All the best for your new project.</Typography>
-            <Typography>
-              {/* {store.body
-                ? store.body.map(mail => <div onClick={() => handleMailClick(mail)}>{mail.documentNo}</div>)
-                : null} */}
-              Please make sure to read our Template Documentation to understand where to go from here and how to use our
-              template.
-            </Typography>
-          </CardContent>
-        </Card>
+  const [isApproveEntry, setApproveEntry] = useState<null | ApproveEntry[]>(null)
+  const [error, setError] = useState<boolean>(false)
+
+  useEffect(() => {
+    const storedToken: DBCUsersType = JSON.parse(window.localStorage.getItem('DBC')!)
+    axios
+      .post('https://eteapi.sapware.net/approveEntry', {
+        "user": `${storedToken.user}`,
+        "pass": `${storedToken.pass}`
+      })
+      .then(response => {
+        setApproveEntry(response.data.body)
+        setError(false)
+      })
+      .catch((error) => {
+        setError(true)
+        console.log(error);
+      })
+
+
+  }, [])
+  if (isApproveEntry) {
+    return (
+      <ApexChartWrapper>
+        <Grid container spacing={6} className='match-height'>
+          <Grid item xs={12} md={4}>
+            <MostSalesInCountries />
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <ApproveEntryTable row={isApproveEntry} />
+          </Grid>
+        </Grid>
+      </ApexChartWrapper>
+    )
+  } else if (error) {
+    return (
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Alert severity='error'>
+            ดึงข้อมูลไม่ได้ Webservice ที่ business central 365 มีปัญหา
+          </Alert>
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title='ACL and JWT 🔒'></CardHeader>
-          <CardContent>
-            <Typography sx={{ mb: 2 }}>
-              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are implemented in the starter-kit as well.
-            </Typography>
-            <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
-          </CardContent>
-        </Card>
+    )
+  }
+  else {
+    return (
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Alert severity='warning'>
+            กำลังดึงข้อมูลจาก business central 365
+          </Alert>
+        </Grid>
       </Grid>
-    </Grid>
-  )
+    )
+  }
 }
 
 export default Home

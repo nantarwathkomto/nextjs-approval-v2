@@ -19,3 +19,7 @@ export type UsersType = {
   currentPlan: string
   avatarColor?: ThemeColor
 }
+export type DBCUsersType = {
+  user: string
+  pass: string
+}

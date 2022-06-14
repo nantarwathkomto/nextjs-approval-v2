@@ -25,8 +25,17 @@ import CrmProjectTimeline from 'src/views/dashboards/crm/CrmProjectTimeline'
 import CrmMeetingSchedule from 'src/views/dashboards/crm/CrmMeetingSchedule'
 import CrmSocialNetworkVisits from 'src/views/dashboards/crm/CrmSocialNetworkVisits'
 import CrmMostSalesInCountries from 'src/views/dashboards/crm/CrmMostSalesInCountries'
+import axios from 'axios'
+import { InferGetStaticPropsType } from 'next/types'
 
-const CrmDashboard = () => {
+type user = {
+  userId: number,
+  id: number,
+  title: string,
+  completed: boolean
+}
+
+const CrmDashboard = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6} className='match-height'>
@@ -92,6 +101,24 @@ const CrmDashboard = () => {
       </Grid>
     </ApexChartWrapper>
   )
+}
+
+export async function getStaticProps() {
+  const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+  const stringRes: user = res.data;
+  // const stringRes: user | any = null;
+
+  if (!stringRes) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      data: stringRes
+    }
+  };
 }
 
 export default CrmDashboard

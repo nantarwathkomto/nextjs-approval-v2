@@ -1,12 +1,11 @@
 // ** React Import
-import { ReactElement } from 'react'
+import { ReactElement, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
-
 
 // ** Icons Imports
 import Cog from 'mdi-material-ui/Cog'
@@ -17,6 +16,7 @@ import AccountOutline from 'mdi-material-ui/AccountOutline'
 
 // ** Types Imports
 import { ThemeColor } from 'src/@core/layouts/types'
+import { ApproveEntry } from 'src/model'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
@@ -25,40 +25,29 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-import Jobdetail from 'src/types/apps/ApproveEntryTypes'
-
-// JobLedEntry
-
-interface Props {
-  row: Jobdetail[]
+interface props {
+  row: ApproveEntry[]
 }
 
-// interface TableBodyRowType {
-//   LineNo: number
-//   No: number
-//   JobTaskNo: string
-//   Description: string
-//   LineType: string
-//   PlanningDate: string
-//   Quantity: number
-//   TotalPrice: number
-//   Type: string
-//   UnitCost: string
-//   UnitPrice: string
-//   // avatarSrc?: string
-//   // status: 'active' | 'pending' | 'inactive'
-//   // role: 'admin' | 'editor' | 'author' | 'maintainer' | 'subscriber'
-// }
+interface TableBodyRowType {
+  id: number
+  name: string
+  email: string
+  username: string
+  avatarSrc?: string
+  status: 'active' | 'pending' | 'inactive'
+  role: 'admin' | 'editor' | 'author' | 'maintainer' | 'subscriber'
+}
 
 interface CellType {
-  row: Jobdetail
+  row: ApproveEntry
 }
 
-interface RoleObj {
-  [key: string]: {
-    icon: ReactElement
-  }
-}
+// interface RoleObj {
+//   [key: string]: {
+//     icon: ReactElement
+//   }
+// }
 
 interface StatusObj {
   [key: string]: {
@@ -66,34 +55,32 @@ interface StatusObj {
   }
 }
 
-const roleObj: RoleObj = {
-  admin: {
-    icon: <Laptop sx={{ mr: 2, color: 'error.main' }} />
-  },
-  author: {
-    icon: <Cog sx={{ mr: 2, color: 'warning.main' }} />
-  },
-  maintainer: {
-    icon: <ChartDonut sx={{ mr: 2, color: 'success.main' }} />
-  },
-  editor: {
-    icon: <PencilOutline sx={{ mr: 2, color: 'info.main' }} />
-  },
-  subscriber: {
-    icon: <AccountOutline sx={{ mr: 2, color: 'primary.main' }} />
-  }
-}
+// const roleObj: RoleObj = {
+//   admin: {
+//     icon: <Laptop sx={{ mr: 2, color: 'error.main' }} />
+//   },
+//   author: {
+//     icon: <Cog sx={{ mr: 2, color: 'warning.main' }} />
+//   },
+//   maintainer: {
+//     icon: <ChartDonut sx={{ mr: 2, color: 'success.main' }} />
+//   },
+//   editor: {
+//     icon: <PencilOutline sx={{ mr: 2, color: 'info.main' }} />
+//   },
+//   subscriber: {
+//     icon: <AccountOutline sx={{ mr: 2, color: 'primary.main' }} />
+//   }
+// }
 
 const statusObj: StatusObj = {
-  active: { color: 'success' },
-  pending: { color: 'warning' },
-  inactive: { color: 'secondary' }
+  Approved: { color: 'success' },
+  Open: { color: 'warning' },
+  Canceled: { color: 'secondary' },
+  Reject: { color: 'info' }
 }
 
-const currencyFormatter = new Intl.NumberFormat('th', {
-  style: 'currency',
-  currency: 'THB',
-});
+// const row: ApproveEntry[]
 
 // const rows: TableBodyRowType[] = [
 //   {
@@ -170,34 +157,41 @@ const currencyFormatter = new Intl.NumberFormat('th', {
 //   }
 // ]
 
-// const renderUserAvatar = (row: TableBodyRowType) => {
-//   if (row.avatarSrc) {
-//     return <CustomAvatar src={row.avatarSrc} sx={{ mr: 3, width: 34, height: 34 }} />
-//   } else {
-//     return (
-//       <CustomAvatar skin='light' sx={{ mr: 3, width: 34, height: 34, fontSize: '.8rem' }}>
-//         {getInitials(row.name ? row.name : 'John Doe')}
-//       </CustomAvatar>
-//     )
-//   }
-// }
+const renderUserAvatar = (row: ApproveEntry) => {
+  // if (row.avatarSrc) {
+  //   return <CustomAvatar src='/images/avatars/3.png' sx={{ mr: 3, width: 34, height: 34 }} />
+  // } else {
+  return (
+    <CustomAvatar skin='light' sx={{ mr: 3, width: 34, height: 34, fontSize: '.8rem' }}>
+      {getInitials(row.requester ? row.requester : 'John Doe')}
+    </CustomAvatar>
+  )
+  // }
+}
 
 const columns: GridColDef[] = [
+  // {
+  //   flex: 0.15,
+  //   minWidth: 110,
+  //   field: 'entryNo',
+  //   headerName: 'entryNo',
+  //   renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.entryNo}</Typography>
+  // },
   {
     flex: 0.25,
-    field: 'JobTaskNo',
+    field: 'requester',
     minWidth: 200,
-    headerName: 'Job Task No.',
+    headerName: 'User',
     renderCell: ({ row }: CellType) => {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* {renderUserAvatar(row)} */}
+          {renderUserAvatar(row)}
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant='subtitle2' sx={{ color: 'text.primary' }}>
-              {row.JobTaskNo}
+              {row.requester}
             </Typography>
             <Typography variant='caption' sx={{ lineHeight: 1.6667 }}>
-              {row.Description}
+              {row.requesterName ? row.requesterName : "นางสาว ทางทอง สุขใจ"}
             </Typography>
           </Box>
         </Box>
@@ -207,70 +201,67 @@ const columns: GridColDef[] = [
   {
     flex: 0.3,
     minWidth: 250,
-    field: 'Type',
-    headerName: 'Type',
+    field: 'documentNo',
+    headerName: 'documentNo',
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.documentNo}</Typography>
   },
   {
     flex: 0.2,
     minWidth: 130,
-    field: 'Quantity',
-    headerName: 'Quantity',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{currencyFormatter.format(Number(row.Quantity))}</Typography>
-  },
-  {
-    flex: 0.2,
-    minWidth: 130,
-    field: 'UnitCost',
-    headerName: 'Unit Cost',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{currencyFormatter.format(Number(row.UnitCost))}</Typography>
-  },
-  {
-    flex: 0.2,
-    minWidth: 130,
-    field: 'UnitPrice',
-    headerName: 'Unit Price',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{currencyFormatter.format(Number(row.UnitPrice))}</Typography>
+    field: 'companyName',
+    headerName: 'companyName',
     // renderCell: ({ row }: CellType) => (
     //   <Box sx={{ display: 'flex', alignItems: 'center' }}>
     //     {roleObj[row.role].icon}
     //     <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{row.role}</Typography>
     //   </Box>
     // )
+    renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.companyName}</Typography>
   },
   {
     flex: 0.15,
     minWidth: 110,
-    field: 'TotalPrice',
-    headerName: 'Total Price',
-    renderCell: ({ row }: CellType) => <Typography variant='body2'>{currencyFormatter.format(Number(row.TotalPrice))}</Typography>
-
-    // renderCell: ({ row }: CellType) => (
-    //   <CustomChip
-    //     skin='light'
-    //     size='small'
-    //     label={row.status}
-    //     color={statusObj[row.status].color}
-    //     sx={{ textTransform: 'capitalize', '& .MuiChip-label': { px: 2.5, lineHeight: 1.385 } }}
-    //   />
-    // )
+    field: 'status',
+    headerName: 'Status',
+    renderCell: ({ row }: CellType) => (
+      <CustomChip
+        skin='light'
+        size='small'
+        label={row.status}
+        color={statusObj[row.status].color}
+        sx={{ textTransform: 'capitalize', '& .MuiChip-label': { px: 2.5, lineHeight: 1.385 } }}
+      />
+    )
   }
 ]
 
-const DocTable = ({ row }: Props) => {
+const ApproveEntryTable = ({ row }: props) => {
+  useEffect(() => {
+    console.log(row);
+  }, [])
   return (
     <Card>
-      <div style={{ height: 300, width: '100%' }}>
-        <DataGrid
-          getRowId={(row) => row.id}
+      <div style={{ height: 450, width: '100%' }}>
+        {/* <DataGrid
+          getRowId={(row) => row.entryNo}
+          autoHeight
           hideFooter
           rows={row}
           columns={columns}
           disableSelectionOnClick
-          pagination={undefined} />
-
+          pagination={undefined}
+        /> */}
+        <DataGrid
+          getRowId={(row) => row.entryNo}
+          hideFooter
+          rows={row}
+          columns={columns}
+          disableSelectionOnClick
+          pagination={undefined}
+        />
       </div>
     </Card>
   )
 }
 
-export default DocTable
+export default ApproveEntryTable
