@@ -3,11 +3,11 @@ import Grid from '@mui/material/Grid'
 import Alert from '@mui/material/Alert'
 
 // ** Icon Imports
-import CartPlus from 'mdi-material-ui/CartPlus'
-import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
+// import CartPlus from 'mdi-material-ui/CartPlus'
+// import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
 
 // ** Custom Component Import
-import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
+// import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'

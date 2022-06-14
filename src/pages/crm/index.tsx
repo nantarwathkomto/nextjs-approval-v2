@@ -35,7 +35,7 @@ type user = {
   completed: boolean
 }
 
-const CrmDashboard = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const CrmDashboard = ({ }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6} className='match-height'>
@@ -106,7 +106,6 @@ const CrmDashboard = ({ data }: InferGetStaticPropsType<typeof getStaticProps>) 
 export async function getStaticProps() {
   const res = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
   const stringRes: user = res.data;
-  // const stringRes: user | any = null;
 
   if (!stringRes) {
     return {
