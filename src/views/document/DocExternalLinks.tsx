@@ -32,44 +32,110 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import Jobdetail from 'src/types/apps/ApproveEntryTypes'
 
 interface DataType {
   title: string
-  amount: string
+  amount: number
   icon: ReactNode
   color: ThemeColor
   trendAmount: number
 }
 
-const data: DataType[] = [
-  {
-    amount: '$845k',
-    trendAmount: 82,
-    color: 'primary',
-    title: 'Google Analytics',
-    icon: <ChevronUp sx={{ color: 'success.main' }} />
-  },
-  {
-    trendAmount: 52,
-    amount: '$12.5k',
-    color: 'secondary',
-    title: 'Facebook Ads',
-    icon: <ChevronDown sx={{ color: 'error.main' }} />
-  }
-]
+interface prop {
+  rows: Jobdetail[]
+}
 
-const series = [
-  {
-    name: 'Google Analytics',
-    data: [155, 135, 320, 100, 150, 335, 160]
-  },
-  {
-    name: 'Facebook Ads',
-    data: [110, 235, 125, 230, 215, 115, 200]
-  }
-]
+const currencyFormatter = new Intl.NumberFormat('th', {
+  style: 'currency',
+  currency: 'THB',
+});
 
-const DocExternalLinks = () => {
+// const data: DataType[] = [
+//   {
+//     amount: '$845k',
+//     trendAmount: 82,
+//     color: 'primary',
+//     title: 'Google Analytics',
+//     icon: <ChevronUp sx={{ color: 'success.main' }} />
+//   }
+// ]
+
+// const series = [
+//   {
+//     name: 'Google Analytics',
+//     data: [155, 135, 320, 100, 150, 335, 160]
+//   },
+//   {
+//     name: 'Google Analytics',
+//     data: [155, 135, 320, 100, 150, 335, 160]
+//   }
+// ]
+
+
+const DocExternalLinks = ({ rows }: prop) => {
+  const JobTasks = rows.filter((row) => {
+    return (row.TotalPrice > 0 || row.UnitCost > 0 || row.UnitPrice > 0)
+  })
+
+  const dataTotalPrice = JobTasks.map((data) => {
+    return data.TotalPrice
+  })
+  const dataUnitPrice = JobTasks.map((data) => {
+    return data.UnitPrice
+  })
+  const dataUnitCost = JobTasks.map((data) => {
+    return data.UnitCost
+  })
+  const labelJobTask = JobTasks.map((data) => {
+    return (data.JobTaskNo + ':' + data.Description)
+  })
+
+  const SumDataTotalPrice = dataTotalPrice.reduce((partialSum, a) => partialSum + a, 0);
+  const SumDataUnitPrice = dataUnitPrice.reduce((partialSum, a) => partialSum + a, 0);
+  const SumDataUnitCost = dataUnitCost.reduce((partialSum, a) => partialSum + a, 0);
+
+
+  const data: DataType[] = [
+    {
+      amount: SumDataTotalPrice,
+      trendAmount: 82,
+      color: 'primary',
+      title: 'Total Price',
+      icon: <ChevronUp sx={{ color: 'success.main' }} />
+    },
+    {
+      amount: SumDataUnitPrice,
+      trendAmount: 82,
+      color: 'info',
+      title: 'Unit Price',
+      icon: <ChevronUp sx={{ color: 'success.main' }} />
+    },
+    {
+      amount: SumDataUnitCost,
+      trendAmount: 82,
+      color: 'error',
+      title: 'Unit Cost',
+      icon: <ChevronUp sx={{ color: 'success.main' }} />
+    }
+  ]
+
+
+  const series = [
+    {
+      name: 'Total Price',
+      data: [SumDataTotalPrice]
+    },
+    {
+      name: 'Unit Price',
+      data: [SumDataUnitPrice]
+    },
+    {
+      name: 'Unit Cost',
+      data: [SumDataUnitCost]
+    }
+  ]
+
   // ** Hook
   const theme = useTheme()
 
@@ -82,7 +148,6 @@ const DocExternalLinks = () => {
     plotOptions: {
       bar: {
         borderRadius: 10,
-        columnWidth: '41%',
         endingShape: 'rounded',
         startingShape: 'rounded'
       }
@@ -91,10 +156,18 @@ const DocExternalLinks = () => {
       labels: { show: false },
       axisTicks: { show: false },
       axisBorder: { show: false },
-      categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      categories: ['Total Price', 'Unit Price', 'Unit Cost']
+      // categories: labelJobTask
     },
-    yaxis: { show: false },
-    colors: [hexToRGBA(theme.palette.primary.main, 1), hexToRGBA(theme.palette.secondary.main, 1)],
+    yaxis: {
+      show: true,
+      tickAmount: 3,
+      labels: {
+        // formatter: value => `${value > 999 ? `${(value / 1000).toFixed(0)}` : value}`
+        formatter: value => currencyFormatter.format(value)
+      }
+    },
+    colors: [hexToRGBA(theme.palette.primary.main, 1), hexToRGBA(theme.palette.secondary.main, 1), hexToRGBA(theme.palette.error.dark, 1)],
     grid: {
       strokeDashArray: 10,
       padding: {
@@ -177,7 +250,7 @@ const DocExternalLinks = () => {
       <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
         <ReactApexcharts type='bar' series={series} options={options} />
       </CardContent>
-      <TableContainer sx={{ mb: 3.75 }}>
+      {/* <TableContainer sx={{ mb: 3.75 }}>
         <Table>
           <TableBody>
             {data.map((item, index) => (
@@ -209,7 +282,7 @@ const DocExternalLinks = () => {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
     </Card>
   )
 }

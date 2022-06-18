@@ -259,7 +259,7 @@ const columns: GridColDef[] = [
 const DocTable = ({ row }: Props) => {
   return (
     <Card>
-      <div style={{ height: 300, width: '100%' }}>
+      <div style={{ height: 550, width: '100%' }}>
         <DataGrid
           getRowId={(row) => row.id}
           hideFooter
@@ -267,7 +267,6 @@ const DocTable = ({ row }: Props) => {
           columns={columns}
           disableSelectionOnClick
           pagination={undefined} />
-
       </div>
     </Card>
   )

@@ -42,17 +42,17 @@ import DocMonthlyBudget from './DocMonthlyBudget'
 import DocTable from './DocTable'
 import DocExternalLinks from './DocExternalLinks'
 
+const currencyFormatter = new Intl.NumberFormat('th', {
+    style: 'currency',
+    currency: 'THB',
+});
+
+
 const DocumentView = () => {
 
     // ** State
     const [error, setError] = useState<boolean>(false)
     const [data, setData] = useState<null | ApproveEntryType>(null)
-
-    const currencyFormatter = new Intl.NumberFormat('th', {
-        style: 'currency',
-        currency: 'THB',
-    });
-
 
     useEffect(() => {
         const storedToken: DBCUsersType = JSON.parse(window.localStorage.getItem('DBC')!)
@@ -60,15 +60,20 @@ const DocumentView = () => {
             .post('https://eteapi.sapware.net/approveEntryAndDetailByDocumentId', {
                 "user": `${storedToken.user}`,
                 "pass": `${storedToken.pass}`,
-                "documentId": `ETEM-MM-63/180`
+                // "documentId": `ETEM-MM-62/051-GSB`
+                "documentId": `ETEM-MM-63/169-OT`
                 // "user": `benz`,
                 // "pass": `P@ssw0rd@1`,
                 // "documentId": `BOQR-202204018`
             })
             .then(response => {
-                console.log(response.data.body);
-                setData(response.data.body[0])
-                setError(false)
+                if (response.data.header.HeaderStatus === 200) {
+                    setData(response.data.body[0])
+                    setError(false)
+                } else {
+                    setData(null)
+                    setError(true)
+                }
             })
             .catch(() => {
                 setData(null)
@@ -83,36 +88,24 @@ const DocumentView = () => {
         const calSumTotalPrice = currencyFormatter.format(data.jobdetail.reduce(function (a, b) { return a + b['TotalPrice']; }, 0));
 
         return (
-            //     <CardStatisticsVertical
-            //     stats={calSumUnitCost + ' บาท'}
-            //     color='warning'
-            //     trendNumber='+0%'
-            //     icon={<CartPlus />}
-            //     title='Total Cost'
-            //     chipText='Last 1 Month'
-            // />
-            // <CardStatisticsVertical
-            //     stats={calSumTotalPrice + ' บาท'}
-            //     color='success'
-            //     trendNumber='+0%'
-            //     title='Total Price'
-            //     icon={<CurrencyUsd />}
-            //     chipText='Last 1 Month'
-            // />
-            // 
-            // <DocTable row={data.jobdetail} />
-            // <DocExternalLinks />
-            // <DocumentViewCenter data={data} />
             <ApexChartWrapper>
                 <Grid container
                     justifyContent="center"
-                    alignItems="flex-start"
                     spacing={3}
+                    alignItems="stretch"
                     className='match-height'>
+                    <Grid item xs={12} md={3}>
+                        <DocSocialNetworkVisits data2={data.steps} />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                        <DocWeeklyOverview />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <DocProjectTimeline />
+                    </Grid>
                     <Grid item xs={12} md={6} >
                         <Grid container
                             justifyContent="center"
-                            alignItems="flex-start"
                             spacing={3}
                             className='match-height'>
                             <Grid item xs={12}>
@@ -148,7 +141,7 @@ const DocumentView = () => {
                         </Grid>
                     </Grid>
                     <Grid item xs={12} md={6} >
-                        <DocExternalLinks />
+                        <DocExternalLinks rows={data.jobdetail} />
                     </Grid>
                     <Grid item xs={12}>
                         <DocTable row={data.jobdetail} />

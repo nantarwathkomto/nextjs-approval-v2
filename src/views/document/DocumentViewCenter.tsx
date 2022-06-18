@@ -185,11 +185,11 @@ const DocumentViewCenter = ({ data }: Props) => {
                                         {data.documentType}
                                     </Typography>
                                 </Box>
-                                {/* <Box sx={{ display: 'flex', mb: 2.7 }}>
-                                    <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Tax ID:</Typography>
-                                    <Typography variant='body2'>Tax-8894</Typography>
-                                </Box>
                                 <Box sx={{ display: 'flex', mb: 2.7 }}>
+                                    <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Date:</Typography>
+                                    <Typography variant='body2'>{data.dueDate}</Typography>
+                                </Box>
+                                {/*<Box sx={{ display: 'flex', mb: 2.7 }}>
                                     <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Contact:</Typography>
                                     <Typography variant='body2'>+1 {data.dueDate}</Typography>
                                 </Box>
