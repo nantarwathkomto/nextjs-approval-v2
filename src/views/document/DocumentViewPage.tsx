@@ -1,13 +1,9 @@
 // ** React Imports
 import { useState, useEffect } from 'react'
 
-// ** Next Import
-import Link from 'next/link'
-
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 import Alert from '@mui/material/Alert'
-import Masonry from '@mui/lab/Masonry'
 
 // ** Icon Imports
 import CartPlus from 'mdi-material-ui/CartPlus'
@@ -23,22 +19,15 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import axios from 'axios'
 
 // ** Types
-import { InvoiceType } from 'src/types/apps/invoiceTypes'
-// import { UserLayoutType, UsersType } from 'src/types/apps/userTypes'
-import { DBCUsersType, UserLayoutType } from 'src/types/apps/userTypes'
+import { DBCUsersType } from 'src/types/apps/userTypes'
 import { ApproveEntryType } from 'src/types/apps/ApproveEntryTypes'
-import Jobdetail from 'src/types/apps/ApproveEntryTypes'
+import { UserDBC } from 'src/types/apps/UserDBCType'
 
 // View
 import DocumentViewCenter from 'src/views/document/DocumentViewCenter'
-import DocAward from './DocAward'
-import DocTotalProfit from './DocTotalProfit'
-import DocTotalGrowth from './DocTotalGrowth'
-import DocOrganicSessions from './DocOrganicSessions'
 import DocProjectTimeline from './DocProjectTimeline'
 import DocWeeklyOverview from './DocWeeklyOverview'
 import DocSocialNetworkVisits from './DocSocialNetworkVisits'
-import DocMonthlyBudget from './DocMonthlyBudget'
 import DocTable from './DocTable'
 import DocExternalLinks from './DocExternalLinks'
 
@@ -47,24 +36,27 @@ const currencyFormatter = new Intl.NumberFormat('th', {
     currency: 'THB',
 });
 
+interface prop {
+    documentId: string
+}
 
-const DocumentView = () => {
+const DocumentView = ({ documentId }: prop) => {
 
     // ** State
     const [error, setError] = useState<boolean>(false)
     const [data, setData] = useState<null | ApproveEntryType>(null)
+    const [user, setUser] = useState<null | UserDBC[]>(null)
 
     useEffect(() => {
         const storedToken: DBCUsersType = JSON.parse(window.localStorage.getItem('DBC')!)
+        const company: string = window.localStorage.getItem('company')!
+
         axios
             .post('https://eteapi.sapware.net/approveEntryAndDetailByDocumentId', {
                 "user": `${storedToken.user}`,
                 "pass": `${storedToken.pass}`,
-                // "documentId": `ETEM-MM-62/051-GSB`
-                "documentId": `ETEM-MM-63/169-OT`
-                // "user": `benz`,
-                // "pass": `P@ssw0rd@1`,
-                // "documentId": `BOQR-202204018`
+                "documentId": `${documentId}`,
+                "companyName": `${company}`
             })
             .then(response => {
                 if (response.data.header.HeaderStatus === 200) {
@@ -79,9 +71,28 @@ const DocumentView = () => {
                 setData(null)
                 setError(true)
             })
+        axios
+            .post('https://eteapi.sapware.net/getAllUserByCompany', {
+                "user": `${storedToken.user}`,
+                "pass": `${storedToken.pass}`,
+                "companyName": `${company}`
+            })
+            .then(response => {
+                if (response.data.header.HeaderStatus === 200) {
+                    setUser(response.data.body)
+                    setError(false)
+                } else {
+                    setUser(null)
+                    setError(true)
+                }
+            })
+            .catch(() => {
+                setUser(null)
+                setError(true)
+            })
     }, [])
 
-    if (data) {
+    if (data && user) {
         const calSumQuantity = currencyFormatter.format(data.jobdetail.reduce(function (a, b) { return a + b['Quantity']; }, 0));
         const calSumUnitCost = currencyFormatter.format(data.jobdetail.reduce(function (a, b) { return a + b['UnitCost']; }, 0));
         const calSumUnitPrice = currencyFormatter.format(data.jobdetail.reduce(function (a, b) { return a + b['UnitPrice']; }, 0));
@@ -136,7 +147,7 @@ const DocumentView = () => {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>
-                                <DocumentViewCenter data={data} />
+                                <DocumentViewCenter data={data} user={user} />
                             </Grid>
                         </Grid>
                     </Grid>

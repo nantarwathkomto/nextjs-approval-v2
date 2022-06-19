@@ -14,7 +14,6 @@ import axios from 'axios'
 // ** Types
 import { InvoiceType } from 'src/types/apps/invoiceTypes'
 import { UserLayoutType, UsersType } from 'src/types/apps/userTypes'
-import { ApproveEntryType } from 'src/types/apps/ApproveEntryTypes'
 
 // ** Demo Components Imports
 import UserViewLeft from 'src/views/apps/user/view/UserViewLeft'
@@ -31,14 +30,9 @@ const UserView = ({ id, invoiceData }: Props) => {
 
   useEffect(() => {
     axios
-      .post('https://eteapi.sapware.net/approveEntryAndDetailByDocumentId', {
-        "user": `benz`,
-        "pass": `P@ssw0rd@1`,
-        "documentId": `BOQ-TL-59/036-7`
-      })
+      .get('/apps/user', { params: { id } })
       .then(response => {
-        console.log(response.data.body);
-        setData(response.data.body[0])
+        setData(response.data)
         setError(false)
       })
       .catch(() => {

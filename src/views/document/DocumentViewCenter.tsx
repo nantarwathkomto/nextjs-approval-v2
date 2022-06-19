@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -34,12 +34,14 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
 import { ApproveEntryType } from 'src/types/apps/ApproveEntryTypes'
+import { UserDBC } from 'src/types/apps/UserDBCType'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
 interface Props {
     data: ApproveEntryType
+    user: UserDBC[]
 }
 
 interface ColorsType {
@@ -86,16 +88,19 @@ const TrophyImg = styled('img')(({ theme }) => ({
     }
 }))
 
-const DocumentViewCenter = ({ data }: Props) => {
+const DocumentViewCenter = ({ data, user }: Props) => {
     // ** States
     const [openEdit, setOpenEdit] = useState<boolean>(false)
 
     // Handle Edit dialog
     const handleEditClickOpen = () => setOpenEdit(true)
     const handleEditClose = () => setOpenEdit(false)
+    useEffect(() => {
+        console.log(user);
+    }, []);
 
 
-    if (data) {
+    if (data && user) {
         return (
             <Grid container spacing={6}>
                 <Grid item xs={12}>
@@ -249,10 +254,9 @@ const DocumentViewCenter = ({ data }: Props) => {
                                         id='user-view-plans-select'
                                         labelId='user-view-plans-select-label'
                                     >
-                                        <MenuItem value='Basic'>นันทวัฒน์ คำโท</MenuItem>
-                                        <MenuItem value='Standard'>นันทวัฒน์ คำโท 2</MenuItem>
-                                        <MenuItem value='Enterprise'>นันทวัฒน์ คำโท 3</MenuItem>
-                                        <MenuItem value='Company'>นันทวัฒน์ คำโท 4</MenuItem>
+                                        {user.map((data, index) => {
+                                            return <MenuItem value={data.userId}>{data.fullname}</MenuItem>
+                                        })}
                                     </Select>
                                 </FormControl>
                                 <Button variant='contained' sx={{ minWidth: ['100%', 0] }}>

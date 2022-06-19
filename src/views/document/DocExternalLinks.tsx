@@ -123,16 +123,16 @@ const DocExternalLinks = ({ rows }: prop) => {
 
   const series = [
     {
-      name: 'Total Price',
-      data: [SumDataTotalPrice]
-    },
-    {
       name: 'Unit Price',
       data: [SumDataUnitPrice]
     },
     {
       name: 'Unit Cost',
       data: [SumDataUnitCost]
+    },
+    {
+      name: 'Total Price',
+      data: [SumDataTotalPrice]
     }
   ]
 
@@ -141,15 +141,26 @@ const DocExternalLinks = ({ rows }: prop) => {
 
   const options: ApexOptions = {
     chart: {
-      stacked: true,
+      offsetY: -9,
+      offsetX: -16,
       parentHeightOffset: 0,
       toolbar: { show: false }
     },
     plotOptions: {
       bar: {
-        borderRadius: 10,
+        borderRadius: 8,
+        columnWidth: '35%',
         endingShape: 'rounded',
-        startingShape: 'rounded'
+        startingShape: 'rounded',
+        // colors: {
+        //   ranges: [
+        //     {
+        //       from: 40,
+        //       to: 50,
+        //       color: hexToRGBA(theme.palette.primary.main, 1)
+        //     }
+        //   ]
+        // }
       }
     },
     xaxis: {
@@ -167,7 +178,7 @@ const DocExternalLinks = ({ rows }: prop) => {
         formatter: value => currencyFormatter.format(value)
       }
     },
-    colors: [hexToRGBA(theme.palette.primary.main, 1), hexToRGBA(theme.palette.secondary.main, 1), hexToRGBA(theme.palette.error.dark, 1)],
+    colors: [hexToRGBA(theme.palette.secondary.main, 1), hexToRGBA(theme.palette.error.dark, 1), hexToRGBA(theme.palette.primary.main, 1)],
     grid: {
       strokeDashArray: 10,
       padding: {
@@ -177,7 +188,6 @@ const DocExternalLinks = ({ rows }: prop) => {
         bottom: -14
       }
     },
-    legend: { show: false },
     dataLabels: { enabled: false },
     stroke: {
       width: 6,

@@ -29,10 +29,12 @@ const Home = () => {
 
   useEffect(() => {
     const storedToken: DBCUsersType = JSON.parse(window.localStorage.getItem('DBC')!)
+    const company: string = window.localStorage.getItem('company')!
     axios
       .post('https://eteapi.sapware.net/approveEntry', {
         "user": `${storedToken.user}`,
-        "pass": `${storedToken.pass}`
+        "pass": `${storedToken.pass}`,
+        "companyName": `${company}`
       })
       .then(response => {
         setApproveEntry(response.data.body)

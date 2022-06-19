@@ -1,18 +1,17 @@
 // ** React Import
 import { ReactElement, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { Button } from '@mui/material'
 
-// ** Icons Imports
-import Cog from 'mdi-material-ui/Cog'
-import Laptop from 'mdi-material-ui/Laptop'
-import ChartDonut from 'mdi-material-ui/ChartDonut'
-import PencilOutline from 'mdi-material-ui/PencilOutline'
-import AccountOutline from 'mdi-material-ui/AccountOutline'
+// ** Third Party Components
+import toast from 'react-hot-toast'
 
 // ** Types Imports
 import { ThemeColor } from 'src/@core/layouts/types'
@@ -43,35 +42,12 @@ interface CellType {
   row: ApproveEntry
 }
 
-// interface RoleObj {
-//   [key: string]: {
-//     icon: ReactElement
-//   }
-// }
-
 interface StatusObj {
   [key: string]: {
     color: ThemeColor
   }
 }
 
-// const roleObj: RoleObj = {
-//   admin: {
-//     icon: <Laptop sx={{ mr: 2, color: 'error.main' }} />
-//   },
-//   author: {
-//     icon: <Cog sx={{ mr: 2, color: 'warning.main' }} />
-//   },
-//   maintainer: {
-//     icon: <ChartDonut sx={{ mr: 2, color: 'success.main' }} />
-//   },
-//   editor: {
-//     icon: <PencilOutline sx={{ mr: 2, color: 'info.main' }} />
-//   },
-//   subscriber: {
-//     icon: <AccountOutline sx={{ mr: 2, color: 'primary.main' }} />
-//   }
-// }
 
 const statusObj: StatusObj = {
   Approved: { color: 'success' },
@@ -80,103 +56,45 @@ const statusObj: StatusObj = {
   Reject: { color: 'info' }
 }
 
-// const row: ApproveEntry[]
-
-// const rows: TableBodyRowType[] = [
-//   {
-//     id: 1,
-//     role: 'admin',
-//     status: 'pending',
-//     name: 'Jordan Stevenson',
-//     username: '@jstevenson5c',
-//     email: 'susanna.Lind57@gmail.com',
-//     avatarSrc: '/images/avatars/1.png'
-//   },
-//   {
-//     id: 2,
-//     role: 'editor',
-//     status: 'active',
-//     name: 'Robert Crawford',
-//     username: '@rcrawford1d',
-//     avatarSrc: '/images/avatars/3.png',
-//     email: 'estelle.Bailey10@gmail.com'
-//   },
-//   {
-//     id: 3,
-//     role: 'author',
-//     status: 'inactive',
-//     name: 'Lydia Reese',
-//     username: '@lreese3b',
-//     email: 'milo86@hotmail.com',
-//     avatarSrc: '/images/avatars/2.png'
-//   },
-//   {
-//     id: 4,
-//     role: 'editor',
-//     status: 'pending',
-//     name: 'Richard Sims',
-//     username: '@rsims6f',
-//     email: 'lonnie35@hotmail.com',
-//     avatarSrc: '/images/avatars/5.png'
-//   },
-//   {
-//     id: 5,
-//     status: 'active',
-//     role: 'maintainer',
-//     name: 'Lucile Young',
-//     username: '@lyoung4a',
-//     email: 'ahmad_Collins@yahoo.com',
-//     avatarSrc: '/images/avatars/4.png'
-//   },
-//   {
-//     id: 6,
-//     role: 'editor',
-//     status: 'pending',
-//     name: 'Francis Frank',
-//     username: '@ffrank7e',
-//     avatarSrc: '/images/avatars/7.png',
-//     email: 'tillman.Gleason68@hotmail.com'
-//   },
-//   {
-//     id: 7,
-//     role: 'subscriber',
-//     status: 'inactive',
-//     name: 'Phoebe Patterson',
-//     email: 'otho21@gmail.com',
-//     username: '@ppatterson2g',
-//     avatarSrc: '/images/avatars/8.png'
-//   },
-//   {
-//     id: 8,
-//     status: 'active',
-//     role: 'subscriber',
-//     name: 'Curtis Underwood',
-//     username: '@cunderwood8h',
-//     avatarSrc: '/images/avatars/3.png',
-//     email: 'florencio.Little@hotmail.com'
-//   }
-// ]
 
 const renderUserAvatar = (row: ApproveEntry) => {
-  // if (row.avatarSrc) {
-  //   return <CustomAvatar src='/images/avatars/3.png' sx={{ mr: 3, width: 34, height: 34 }} />
-  // } else {
   return (
     <CustomAvatar skin='light' sx={{ mr: 3, width: 34, height: 34, fontSize: '.8rem' }}>
       {getInitials(row.requester ? row.requester : 'John Doe')}
     </CustomAvatar>
   )
-  // }
 }
 
+const getFullName = async (row: ApproveEntry) => {
+  await window.localStorage.setItem('documentId', row.documentNo)
+}
+// toast(
+//   <Box sx={{ display: 'flex', alignItems: 'center' }}>
+//     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+//       <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
+//         {row.documentNo}
+//       </Typography>
+//     </Box>
+//   </Box>
+// )
+
+
 const columns: GridColDef[] = [
-  // {
-  //   flex: 0.15,
-  //   minWidth: 110,
-  //   field: 'entryNo',
-  //   headerName: 'entryNo',
-  //   renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.entryNo}</Typography>
-  // },
+  {
+    flex: 0.125,
+    minWidth: 140,
+    field: 'actions',
+    headerName: 'Actions',
+    renderCell: ({ row }: CellType) => {
+      return (
+        <Link href="/document">
+          <Button size='small' variant='outlined' color='secondary' onClick={() => getFullName(row)}>
+            Open
+          </Button>
+        </Link >
+      )
+    }
+  },
   {
     flex: 0.25,
     field: 'requester',
@@ -210,12 +128,6 @@ const columns: GridColDef[] = [
     minWidth: 130,
     field: 'companyName',
     headerName: 'companyName',
-    // renderCell: ({ row }: CellType) => (
-    //   <Box sx={{ display: 'flex', alignItems: 'center' }}>
-    //     {roleObj[row.role].icon}
-    //     <Typography sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>{row.role}</Typography>
-    //   </Box>
-    // )
     renderCell: ({ row }: CellType) => <Typography variant='body2'>{row.companyName}</Typography>
   },
   {
@@ -242,15 +154,6 @@ const ApproveEntryTable = ({ row }: props) => {
   return (
     <Card>
       <div style={{ height: 450, width: '100%' }}>
-        {/* <DataGrid
-          getRowId={(row) => row.entryNo}
-          autoHeight
-          hideFooter
-          rows={row}
-          columns={columns}
-          disableSelectionOnClick
-          pagination={undefined}
-        /> */}
         <DataGrid
           getRowId={(row) => row.entryNo}
           hideFooter

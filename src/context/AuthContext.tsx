@@ -121,12 +121,13 @@ const AuthProvider = ({ children }: Props) => {
           .then(async response => {
             const returnUrl = router.query.returnUrl
             const DBC = {
-              user: "henrry",
+              user: "ken",
               pass: "P@ssw0rd@1"
             }
             setUser({ ...response.data.userData })
             await window.localStorage.setItem('userData', JSON.stringify(response.data.userData))
             await window.localStorage.setItem('DBC', JSON.stringify(DBC))
+            await window.localStorage.setItem('company', 'ETEM_Interface')
 
             const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
