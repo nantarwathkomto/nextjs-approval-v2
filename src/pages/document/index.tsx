@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 
 // ** Demo Components Imports
-import DocumentViewPage from 'src/views/document/DocumentViewPage'
+import DocumentViewPage from 'src/views/document/DocumentPage'
 
 // ** mui
 import { Alert, Button, Grid, Typography } from '@mui/material';

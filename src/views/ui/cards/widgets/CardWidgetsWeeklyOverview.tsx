@@ -19,13 +19,6 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
-// ** Type
-import Jobdetail from 'src/types/apps/ApproveEntryTypes'
-
-interface props {
-  data: Jobdetail[]
-}
-
 
 const series = [
   {
@@ -40,7 +33,7 @@ const series = [
   }
 ]
 
-const DocWeeklyOverview = ({ data }: props) => {
+const CardWidgetsWeeklyOverview = () => {
   // ** Hook
   const theme = useTheme()
 
@@ -53,8 +46,8 @@ const DocWeeklyOverview = ({ data }: props) => {
     },
     plotOptions: {
       bar: {
-        borderRadius: 8,
-        columnWidth: '35%',
+        borderRadius: 9,
+        columnWidth: '50%',
         endingShape: 'rounded',
         startingShape: 'rounded',
         colors: {
@@ -113,7 +106,7 @@ const DocWeeklyOverview = ({ data }: props) => {
   return (
     <Card>
       <CardHeader
-        title='Overview'
+        title='Weekly Overview'
         action={
           <IconButton size='small' aria-label='settings' className='card-more-options'>
             <DotsVertical />
@@ -126,16 +119,19 @@ const DocWeeklyOverview = ({ data }: props) => {
           '& .apexcharts-canvas .apexcharts-yaxis-label': { fontSize: '0.75rem', fill: theme.palette.text.disabled }
         }}
       >
-        <ReactApexcharts type='line' height={180} series={series} options={options} />
+        <ReactApexcharts type='line' height={208} series={series} options={options} />
         <Box sx={{ mb: 4, display: 'flex', alignItems: 'center' }}>
           <Typography sx={{ mr: 4 }} variant='h5'>
             62%
           </Typography>
           <Typography variant='body2'>Your sales performance is 35% 😎 better compared to last month</Typography>
         </Box>
+        <Button fullWidth variant='contained'>
+          Details
+        </Button>
       </CardContent>
     </Card>
   )
 }
 
-export default DocWeeklyOverview
+export default CardWidgetsWeeklyOverview
