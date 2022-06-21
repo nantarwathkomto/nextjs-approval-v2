@@ -20,7 +20,6 @@ import CardStatisticsCharacters from 'src/views/ui/cards/statistics/CardStatisti
 import CardStatisticsWeeklySales from 'src/views/ui/cards/statistics/CardStatisticsWeeklySales'
 import CardStatisticsLiveVisitors from 'src/views/ui/cards/statistics/CardStatisticsLiveVisitors'
 import CardStatisticsWeeklySalesBg from 'src/views/ui/cards/statistics/CardStatisticsWeeklySalesBg'
-import CardStatisticsMarketingSales from 'src/views/ui/cards/statistics/CardStatisticsMarketingSales'
 
 // ** Styled Component Import
 import KeenSliderWrapper from 'src/@core/styles/libs/keen-slider'
@@ -48,9 +47,6 @@ const CardStatistics = ({ apiData }: InferGetStaticPropsType<typeof getStaticPro
           </Grid>
           <Grid item xs={12} md={6}>
             <CardStatisticsWeeklySales />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <CardStatisticsMarketingSales />
           </Grid>
           <Grid item xs={12} md={6}>
             <CardStatisticsWeeklySalesBg />
