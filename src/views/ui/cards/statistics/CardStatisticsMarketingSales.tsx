@@ -248,7 +248,7 @@ const Slides = () => {
       })}
     </>
   )
-}
+} //test BANK
 
 const CardStatisticsMarketingSales = ({ rows }: props) => {
   // ** States
