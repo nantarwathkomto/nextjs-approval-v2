@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { DBCUsersType } from 'src/types/apps/userTypes'
 import { ApproveEntry } from 'src/model'
-import { useRouter } from 'next/router'
 import { GetServerSideProps } from 'next/types'
 
 // ** MUI Imports
@@ -39,10 +38,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           return response.data.body.access_token;
         }
       })
-      .catch((error) => {
-
-      })
-
 
     return {
       props: { token }, // will be passed to the page component as props
@@ -86,8 +81,6 @@ const Home = ({ token }: props) => {
         })
         .then(response => {
           console.log(response.data.body);
-        })
-        .catch((error) => {
         })
     }
   }, [])

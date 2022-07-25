@@ -1,35 +1,38 @@
 // ** React Imports
-import { useState, ReactNode, MouseEvent } from 'react'
+import {
+  useState, ReactNode,
+  // MouseEvent 
+} from 'react'
 
 // ** Next Imports
-import Link from 'next/link'
+// import Link from 'next/link'
 
 // ** MUI Components
-import Alert from '@mui/material/Alert'
-import MuiLink from '@mui/material/Link'
+// import Alert from '@mui/material/Alert'
+// import MuiLink from '@mui/material/Link'
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
+// import Divider from '@mui/material/Divider'
+// import Checkbox from '@mui/material/Checkbox'
+// import TextField from '@mui/material/TextField'
+// import InputLabel from '@mui/material/InputLabel'
+// import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
-import FormControl from '@mui/material/FormControl'
+// import FormControl from '@mui/material/FormControl'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import OutlinedInput from '@mui/material/OutlinedInput'
+// import OutlinedInput from '@mui/material/OutlinedInput'
 import { styled, useTheme } from '@mui/material/styles'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
+// import FormHelperText from '@mui/material/FormHelperText'
+// import InputAdornment from '@mui/material/InputAdornment'
 import Typography, { TypographyProps } from '@mui/material/Typography'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icons Imports
-import Google from 'mdi-material-ui/Google'
-import Github from 'mdi-material-ui/Github'
-import Twitter from 'mdi-material-ui/Twitter'
-import Facebook from 'mdi-material-ui/Facebook'
-import EyeOutline from 'mdi-material-ui/EyeOutline'
-import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
+// import Google from 'mdi-material-ui/Google'
+// import Github from 'mdi-material-ui/Github'
+// import Twitter from 'mdi-material-ui/Twitter'
+// import Facebook from 'mdi-material-ui/Facebook'
+// import EyeOutline from 'mdi-material-ui/EyeOutline'
+// import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 
 // ** Third Party Imports
 import * as yup from 'yup'
@@ -116,12 +119,12 @@ interface FormData {
 }
 
 const LoginPage = () => {
-  const [showPassword, setShowPassword] = useState<boolean>(false)
+  // const [showPassword, setShowPassword] = useState<boolean>(false)
 
   // ** Hooks
   const auth = useAuth()
   const theme = useTheme()
-  const bgClasses = useBgColor()
+  // const bgClasses = useBgColor()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
