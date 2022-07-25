@@ -30,7 +30,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     //   },
     // }
     const token = await axios
-      .post('http://localhost:4000/getToken', {
+      .post('https://eteapi.sapware.net/getToken', {
         "code": `${code}`
       })
       .then(response => {
@@ -72,7 +72,7 @@ const Home = ({ token }: props) => {
     if (token) {
       window.localStorage.setItem('authToken', token)
       axios
-        .post('http://localhost:4000/approveEntry', {
+        .post('https://eteapi.sapware.net/approveEntryAll', {
           filter: `senderID eq 'NANTARWATH.KO' and documentType eq 'Order'&$expand=headers,lines`
         }, {
           headers: {

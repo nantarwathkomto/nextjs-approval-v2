@@ -97,7 +97,7 @@ const AuthProvider = ({ children }: Props) => {
             await window.localStorage.setItem('company', 'ETEM_Interface')
 
             // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-            const redirectURL = 'https://login.microsoftonline.com/cae77d3c-afe2-4cd8-9854-7c7020e38188/oauth2/authorize?resource=https://api.businesscentral.dynamics.com&response_type=code&client_id=7d9ac2ff-35be-46cd-a0d4-539f5074dbf6&redirect_uri=https://7101-124-120-108-107.ngrok.io/home/'
+            const redirectURL = 'https://login.microsoftonline.com/cae77d3c-afe2-4cd8-9854-7c7020e38188/oauth2/authorize?resource=https://api.businesscentral.dynamics.com&response_type=code&client_id=7d9ac2ff-35be-46cd-a0d4-539f5074dbf6&redirect_uri=https://fastdocument.vercel.app/home/'
             router.replace(redirectURL as string)
           })
       })
