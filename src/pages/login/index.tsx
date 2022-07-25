@@ -96,10 +96,8 @@ const LoginPage = () => {
   const { skin } = settings
 
   const {
-    control,
     setError,
-    handleSubmit,
-    formState: { errors }
+    handleSubmit
   } = useForm({
     defaultValues,
     mode: 'onBlur',
