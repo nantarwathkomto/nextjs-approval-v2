@@ -10,11 +10,6 @@ import axios from 'axios'
 // ** Config
 import authConfig from 'src/configs/auth'
 
-// *Fribase
-import firebase from 'src/configs/firebase';
-import { getAuth, signInWithPopup, OAuthProvider } from "firebase/auth";
-
-
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 
@@ -78,34 +73,6 @@ const AuthProvider = ({ children }: Props) => {
   }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    // console.log('useEffect : ' + user);
-    // const provider = new firebase.auth.OAuthProvider('microsoft.com');
-    // provider.setCustomParameters({
-    //   // prompt: "consent",
-    //   // login_hint: 'user@firstadd.onmicrosoft.com'
-    //   tenant: "cae77d3c-afe2-4cd8-9854-7c7020e38188"
-    // })
-    // provider.addScope('mail.read');
-    // provider.addScope('calendars.read');
-
-    // const auth = getAuth();
-    // signInWithPopup(auth, provider)
-    //   .then((result) => {
-    //     // User is signed in.
-    //     // IdP data available in result.additionalUserInfo.profile.
-
-    //     // Get the OAuth access token and ID Token
-    //     const credential = OAuthProvider.credentialFromResult(result);
-    //     const accessToken = credential.accessToken;
-    //     const idToken = credential.idToken;
-    //     console.log(accessToken);
-    //     console.log(idToken);
-
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
     axios
       .post(authConfig.loginEndpoint, params)
       .then(async res => {
@@ -129,8 +96,8 @@ const AuthProvider = ({ children }: Props) => {
             await window.localStorage.setItem('DBC', JSON.stringify(DBC))
             await window.localStorage.setItem('company', 'ETEM_Interface')
 
-            const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-
+            // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+            const redirectURL = 'https://login.microsoftonline.com/cae77d3c-afe2-4cd8-9854-7c7020e38188/oauth2/authorize?resource=https://api.businesscentral.dynamics.com&response_type=code&client_id=7d9ac2ff-35be-46cd-a0d4-539f5074dbf6&redirect_uri=https://7101-124-120-108-107.ngrok.io/home/'
             router.replace(redirectURL as string)
           })
       })
@@ -145,6 +112,7 @@ const AuthProvider = ({ children }: Props) => {
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem('DBC')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    window.localStorage.removeItem('authToken')
     router.push('/login')
   }
 

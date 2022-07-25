@@ -1,13 +1,14 @@
+// **
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { DBCUsersType } from 'src/types/apps/userTypes'
+import { ApproveEntry } from 'src/model'
+import { useRouter } from 'next/router'
+import { GetServerSideProps } from 'next/types'
+
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 import Alert from '@mui/material/Alert'
-
-// ** Icon Imports
-// import CartPlus from 'mdi-material-ui/CartPlus'
-// import CurrencyUsd from 'mdi-material-ui/CurrencyUsd'
-
-// ** Custom Component Import
-// import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 
 // ** Styled Component Import
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
@@ -16,17 +17,46 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import MostSalesInCountries from 'src/views/home/MostSalesInCountries'
 import ApproveEntryTable from 'src/views/home/ApproveEntryTable'
 
+interface props {
+  token: string
+}
 
-// **
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import { DBCUsersType } from 'src/types/apps/userTypes'
-import { ApproveEntry } from 'src/model'
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { code } = context.query
+  if (code) {
+    // return {
+    //   redirect: {
+    //     destination: '/',
+    //     permanent: false,
+    //   },
+    // }
+    const token = await axios
+      .post('http://localhost:4000/getToken', {
+        "code": `${code}`
+      })
+      .then(response => {
+        if (response.data.header.HeaderStatus === 200) {
+          return response.data.body.access_token;
+        }
+      })
+      .catch((error) => {
 
-const Home = () => {
+      })
+
+
+    return {
+      props: { token }, // will be passed to the page component as props
+    }
+  } else {
+    return {
+      props: {}// will be passed to the page component as props
+    }
+  }
+}
+
+const Home = ({ token }: props) => {
   const [isApproveEntry, setApproveEntry] = useState<null | ApproveEntry[]>(null)
   const [error, setError] = useState<boolean>(false)
-
   useEffect(() => {
     const storedToken: DBCUsersType = JSON.parse(window.localStorage.getItem('DBC')!)
     const company: string = window.localStorage.getItem('company')!
@@ -44,9 +74,25 @@ const Home = () => {
         setError(true)
         console.log(error);
       })
-
-
+    if (token) {
+      window.localStorage.setItem('authToken', token)
+      axios
+        .post('http://localhost:4000/approveEntry', {
+          filter: `senderID eq 'NANTARWATH.KO' and documentType eq 'Order'&$expand=headers,lines`
+        }, {
+          headers: {
+            "x-access-token": `${token}`
+          }
+        })
+        .then(response => {
+          console.log(response.data.body);
+        })
+        .catch((error) => {
+        })
+    }
   }, [])
+
+
   if (isApproveEntry) {
     return (
       <ApexChartWrapper>

@@ -38,6 +38,7 @@ import { UserDBC } from 'src/types/apps/UserDBCType'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import axios from 'axios'
 
 interface Props {
     data: ApproveEntryType
